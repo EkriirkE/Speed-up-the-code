@@ -59,11 +59,10 @@ While($mx -gt 0){
 }#Might get a remainder thrown in a CPU+1 thread.  Naja
 
 while($th.Status.IsCompleted -notcontains $true){}
-#dirty "cleanup"
-#$th.ForEach({
-#	[void]$_.Pipe.EndInvoke($_.Status)
-#	$_.Pipe.Dispose()
-#})
+$th.ForEach({
+	[void]$_.Pipe.EndInvoke($_.Status)
+	$_.Pipe.Dispose()
+})
 $pool.Close()
 $pool.Dispose()
 
