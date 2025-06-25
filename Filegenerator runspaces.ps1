@@ -46,7 +46,7 @@ $pool=[RunspaceFactory]::CreateRunspacePool(1,$cc+1)
 $pool.Open()
 
 $mx=50000
-$c=[System.Math]::Round($mx/$cc)	#ChunkSize
+$c=[System.Math]::Floor($mx/$cc)	#ChunkSize
 $th=[System.Collections.ArrayList]@()#I dont feel like precalculating like above, so lets use the alternative NET array
 While($mx -gt 0){
 	#Write-Host "$([System.Math]::Max(0,$mx-$c)) to $($mx-1)"
@@ -61,13 +61,13 @@ While($mx -gt 0){
 }#Might get a remainder thrown in a CPU+1 thread.  Naja
 
 while($th.Status.IsCompleted -notcontains $true){}
-#LOL dirty "cleanup"
+#dirty "cleanup"
 #$th.ForEach({
 #	[void]$_.Pipe.EndInvoke($_.Status)
 #	$_.Pipe.Dispose()
 #})
-#$pool.Close()
-#$pool.Dispose()
+$pool.Close()
+$pool.Dispose()
 
 [System.IO.File]::WriteAllBytes("$PWD\plc_log.txt",[System.Text.Encoding]::UTF8.GetBytes($work.g -Join "`n"))	#Seems faster than Out-File and Set-Content
 [System.Console]::WriteLine("PLC log file generated.")	#Faster than Write-Output and Write-Host
