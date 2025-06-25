@@ -10,25 +10,32 @@ $work=@{
 	r=New-Object System.Random	#Faster than Get-Random
 }
 
-0..4 | ForEach-Object -Parallel {
+$cc=[int]$env:NUMBER_OF_PROCESSORS
+
+$mx=50000
+$c=[System.Math]::Floor($mx/$cc)
+0..$cc | ForEach-Object  -ThrottleLimit $cc -Parallel {
 	$w=$using:work
-	ForEach ($i in ($_*10000)..($_*10000+9999)){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
-		#Shorten var names for faster parsing in "$w.r.Next() $y $z"
+	$c=$using:c
+	ForEach ($i in ($_*$c)..[System.Math]::Min(49999,$_*$c+$c)){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
+		$x=$w.r.Next()	#Get a random number for further pseudo-pseudo random extractions.  Output is still random.
+		#Shorten var names for faster parsing in "$x $y $z"
 		$t=$w.d.AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")	#IDK what to speed up here
-		$p=$w.pa[$w.r.Next()%4]
-		$o=$w.r.Next()%20+101
-		$b=$w.r.Next()%101+1000
-		$s=$w.sa[$w.r.Next()%3]
-		$m=$w.r.Next()	#Your sample is just a large random int so that is what you get, but I think the intention was this? $w.r.Next()%5000/100+60
-		$l=$w.r.Next()%101
-		if($w.r.Next()%7){	#6:7 chance of normality
+		$p=$w.pa[$x%4]
+		$o=$x%20+101
+		$b=$x%101+1000
+		$s=$w.sa[$x%3]
+		$x=$w.r.Next()	#Need to refresh because we already extract %101
+		$m=$x	#Your sample is just a large random int so that is what you get, but I think the intention was this? $x%5000/100+60
+		$l=$x%101
+		if($x%7){	#6:7 chance of normality
 			$w.g[$i]="INFO; $t; $p; System running normally; ; $s; $o; $b; $m; $l"
 		}elseif($e=($w.r.Next()%4)){	#3:4 chance not being Sandextrator overload - Must be actual new value as %4 and %7 dont play nice
 			$e=$w.ea[$e]
 			$w.g[$i]="ERROR; $t; $p; $e; ; $s; $o; $b; $m; $l"
 		}else{
 			$e=$w.ea[$e]
-			$v=$w.r.Next()%10+1	#Seems faster to assign to var first than explicit $($w.r.Next()%10+1) in string, I guess precompile vs runtime char parsing
+			$v=$x%10+1	#Seems faster to assign to var first than explicit $($x%10+1) in string, I guess precompile vs runtime char parsing
 			$w.g[$i]="ERROR; $t; $p; $e; $v; $s; $o; $b; $m; $l"
 		}
 	}

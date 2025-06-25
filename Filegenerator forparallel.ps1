@@ -10,14 +10,9 @@ $work=@{
 	r=New-Object System.Random	#Faster than Get-Random
 }
 
-$cc=[int]$env:NUMBER_OF_PROCESSORS
-
-$mx=50000
-$c=[System.Math]::Floor($mx/$cc)
-0..$cc | ForEach-Object  -ThrottleLimit $cc -Parallel {
+0..4 | ForEach-Object -Parallel {
 	$w=$using:work
-	$c=$using:c
-	ForEach ($i in ($_*$c)..[System.Math]::Min(49999,$_*$c+$c)){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
+	ForEach ($i in ($_*10000)..($_*10000+9999)){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
 		$x=$w.r.Next()	#Get a random number for further pseudo-pseudo random extractions.  Output is still random.
 		#Shorten var names for faster parsing in "$x $y $z"
 		$t=$w.d.AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")	#IDK what to speed up here
