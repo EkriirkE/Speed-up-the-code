@@ -72,13 +72,30 @@ if(0){
 	}
 }
 
-if(1){
+if(0){
 	for($i=0;$i -lt 50000;$i++){
 		$g=@(1,2,3,4,5,6,7,8,9,0)#6,800
 		#$g=1,2,3,4,5,6,7,8,9,0#7,200
 		#$g=[System.Collections.ArrayList]@(1,2,3,4,5,6,7,8,9,0)#8,000
 		#$g=[System.Collections.Generic.List[int]]@(1,2,3,4,5,6,7,8,9,0)#10,000
 		$g[0]=$g[1]
+	}
+}
+if(0){
+	$r=New-Object System.Random
+	$g=[System.Collections.ArrayList]@()
+	for($i=0;$i -lt 50000;$i++){
+		[void]$g.Add($r.Next()%100+567)#5400
+		#[void]$g.Add($r.Next(567,668))#5700
+	}
+}
+if(1){
+	$g=[System.Collections.ArrayList]@()
+	for($i=0;$i -lt 50000;$i++){
+		#[void]$g.Add("$i; $i; $i; $i")#8000
+		#[void]$g.Add([String]$i+"; "+[String]$i+"; "+[String]$i+"; "+[String]$i)#9500
+		[void]$g.Add("{0}; {1}; {2}; {3}" -f ($i,$i,$i,$i))#7000
+		#[void]$g.Add([string]::Format("{0}; {1}; {2}; {3}",$i,$i,$i,$i))#8700
 	}
 }
 
