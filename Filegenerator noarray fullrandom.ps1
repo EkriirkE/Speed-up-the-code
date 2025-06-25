@@ -6,9 +6,9 @@ $sa=@('OK','WARN','ERR')
 $g=[System.Text.StringBuilder]""
 $d=Get-Date	#Prefetch the date once
 $r=New-Object System.Random	#Faster than Get-Random
-ForEach ($i in 0..49999){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
+ForEach ($_ in 0..49999){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
 	#Shorten var names for faster parsing in "$r.Next() $y $z"
-	$t=$d.AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")	#IDK what to speed up here
+	$t=$d.AddSeconds(-$_).ToString("yyyy-MM-dd HH:mm:ss")	#IDK what to speed up here
 	$p=$pa[$r.Next()%4]
 	$o=$r.Next()%20+101
 	$b=$r.Next()%101+1000

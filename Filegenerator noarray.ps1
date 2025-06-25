@@ -6,10 +6,10 @@ $sa=@('OK','WARN','ERR')
 $g=[System.Text.StringBuilder]""
 $d=Get-Date	#Prefetch the date once
 $r=New-Object System.Random	#Faster than Get-Random
-ForEach ($i in 0..49999){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
+ForEach ($_ in 0..49999){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
 	$x=$r.Next()	#Get a random number for further pseudo-pseudo random extractions.  Output is still random.
 	#Shorten var names for faster parsing in "$x $y $z"
-	$t=$d.AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")	#IDK what to speed up here
+	$t=$d.AddSeconds(-$_).ToString("yyyy-MM-dd HH:mm:ss")	#IDK what to speed up here
 	$p=$pa[$x%4]
 	$o=$x%20+101
 	$b=$x%101+1000
