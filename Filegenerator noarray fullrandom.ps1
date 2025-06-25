@@ -26,6 +26,7 @@ ForEach ($_ in 0..49999){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to 
 		$g.AppendLine("ERROR; $t; $p; $e; $v; $s; $o; $b; $m; $l")
 	}
 }
+
 [System.IO.File]::WriteAllBytes("$PWD\plc_log.txt",[System.Text.Encoding]::UTF8.GetBytes($g))	#Seems faster than Out-File and Set-Content
 [System.Console]::WriteLine("PLC log file generated.")	#Faster than Write-Output and Write-Host
 }
