@@ -16,7 +16,6 @@ Param (
 [int]$b,#Stop range
 $w
 )
-	[System.Console]::WriteLine("$a to $b $($w.t)")
 	ForEach ($i in $a..$b){	#Faster than for(;;) or (x..y).ForEach.  Do I dare to unrill the loop :o
 		$x=$w.r.Next()	#Get a random number for further pseudo-pseudo random extractions.  Output is still random.
 		#Shorten var names for faster parsing in "$x $y $z"
@@ -55,21 +54,21 @@ While($mx -gt 0){
 	[void]$r.AddScript($PS)
 	[void]$r.AddArgument([System.Math]::Max(0,$mx-$c))
 	[void]$r.AddArgument($mx-1)
-	[void]$r.AddArgument([ref]$work)
+	[void]$r.AddArgument($work)
 	$r.RunspacePool=$pool
 	$th.Add([PSCustomObject]@{Pipe=$r;Status=$r.BeginInvoke()})
 	$mx-=$c
 }#Might get a remainder thrown in a CPU+1 thread.  Naja
 
-#Stolen cleanup clode
 while($th.Status.IsCompleted -notcontains $true){}
-$th.ForEach({
-	[void]$_.Pipe.EndInvoke($_.Status)
-	$_.Pipe.Dispose()
-})
-$pool.Close()
-$pool.Dispose()
+#LOL dirty "cleanup"
+#$th.ForEach({
+#	[void]$_.Pipe.EndInvoke($_.Status)
+#	$_.Pipe.Dispose()
+#})
+#$pool.Close()
+#$pool.Dispose()
 
-[System.IO.File]::WriteAllBytes("$PWD\plc_log.txt",[System.Text.Encoding]::UTF8.GetBytes($g -Join "`n"))	#Seems faster than Out-File and Set-Content
+[System.IO.File]::WriteAllBytes("$PWD\plc_log.txt",[System.Text.Encoding]::UTF8.GetBytes($work.g -Join "`n"))	#Seems faster than Out-File and Set-Content
 [System.Console]::WriteLine("PLC log file generated.")	#Faster than Write-Output and Write-Host
 }
