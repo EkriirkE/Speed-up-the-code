@@ -14,7 +14,7 @@ $cc=[int]$env:NUMBER_OF_PROCESSORS
 
 $mx=50000
 $c=[System.Math]::Floor($mx/$cc)
-0..$cc | ForEach-Object  -ThrottleLimit $env:NUMBER_OF_PROCESSORS -Parallel {
+0..$cc | ForEach-Object  -ThrottleLimit $cc -Parallel {
 	$w=$using:work
 	$c=$using:c
 	ForEach ($i in ($_*$c)..[System.Math]::Min(49999,$_*$c+$c)){
