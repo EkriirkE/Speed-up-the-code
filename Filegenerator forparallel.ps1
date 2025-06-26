@@ -11,7 +11,7 @@ $work=@{
 }
 
 # $c=50000,5;$cs=$c[0]/$c[1];$(ForEach($i in 0..($c[1]-1)){"($($i*$cs)..$($i*$cs+$cs-1))"}) -Join ","
-@((0..9999),(10000..19999),(20000..29999),(30000..39999),(40000..49999) | ForEach-Object -Parallel {
+@((0..9999),(10000..19999),(20000..29999),(30000..39999),(40000..49999)) | ForEach-Object -Parallel {
 	$work=$using:work
 	ForEach ($i in $_){
 		$seed=$work.random.Next()	#Get a random number for further pseudo-pseudo random extractions.  Output is still random.
@@ -21,7 +21,7 @@ $work=@{
 		$batch=$seed%101+1000
 		$status=$work.statusCodes[$seed%3]
 		$seed=$work.random.Next()	#Need to refresh because we already extract %101
-		$machineTemp=$seed	#Your sample is just a large random int so that is what you get, but I think the intention was this? $seed%5000/100+60
+		$machineTemp=$seed	#Your sample is just a large random int so that is what you get, but I think the intention was this? $seed%5000/100+60 aka (Get-Random -Minimum 6000 -Maximum 11000)/100 or closer to your original code [math]::Round((Get-Random -Minimum 60 -Maximum 110) + (Get-Random -Minimum 0.0 -Maximum 1.0),2)
 		$load=$seed%101
 		if($seed%7){	#6:7 chance of normality
 			$work.output[$i]="INFO; {0}; {1}; System running normally; ; {2}; {3}; {4}; {5}; {6}" -f ($timestamp,$plc,$status,$operator,$batch,$machineTemp,$load)
